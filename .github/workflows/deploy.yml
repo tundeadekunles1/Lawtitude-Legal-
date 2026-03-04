@@ -1,0 +1,34 @@
+name: 🚀 Deploy Lawtitude Legal to cPanel (GCP)
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy to cPanel via FTP
+
+    steps:
+      - name: ✅ Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🚀 FTP Deploy to cPanel on GCP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
+          local-dir: ./
+          server-dir: ${{ secrets.REMOTE_DIR }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            *.zip
+            *.md
+            __MACOSX/**
+
+      - name: ✅ Deployment Successful
+        run: echo "🎉 Lawtitude Legal is now live!"

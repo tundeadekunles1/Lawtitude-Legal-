@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+__MACOSX/
+
+# zip artifacts
+*.zip
+
+# Editor
+.vscode/
+.idea/
