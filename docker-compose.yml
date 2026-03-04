@@ -1,0 +1,41 @@
+services:
+  lawtitude:
+    image: nginx:stable-alpine
+    container_name: lawtitude_web
+    restart: unless-stopped
+
+    volumes:
+      - ./index.html:/usr/share/nginx/html/index.html:ro
+      - ./Lawtitude-Legal_files:/usr/share/nginx/html/Lawtitude-Legal_files:ro
+
+    networks:
+      - traefik_proxy
+
+    labels:
+      - "traefik.enable=true"
+
+      # HTTP → redirect to HTTPS
+      - "traefik.http.routers.lawtitude-http.entrypoints=web"
+      - "traefik.http.routers.lawtitude-http.rule=Host(`lawtitude.34.19.191.244.nip.io`)"
+      - "traefik.http.routers.lawtitude-http.middlewares=redirect-to-https"
+
+      # HTTPS with Let's Encrypt
+      - "traefik.http.routers.lawtitude.entrypoints=websecure"
+      - "traefik.http.routers.lawtitude.rule=Host(`lawtitude.34.19.191.244.nip.io`)"
+      - "traefik.http.routers.lawtitude.tls.certresolver=letsencrypt"
+
+      # Container port
+      - "traefik.http.services.lawtitude.loadbalancer.server.port=80"
+
+networks:
+  traefik_proxy:
+    external: true
+```
+
+Click **"Commit changes"** at the bottom → commit directly to `main`.
+
+---
+
+Then immediately also fix the workflow file → go to:
+```
+https://github.com/tundeadekunles1/Lawtitude-Legal-/edit/main/.github/workflows/deploy.yml
