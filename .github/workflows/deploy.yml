@@ -1,5 +1,3 @@
-# In your local terminal, overwrite the workflow file:
-@"
 name: 🚀 Deploy Lawtitude Legal to GCP (Docker + Traefik)
 
 on:
@@ -18,25 +16,24 @@ jobs:
       - name: 🔑 Setup SSH Key
         run: |
           mkdir -p ~/.ssh
-          echo "`${{ secrets.GCP_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.GCP_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H `${{ secrets.GCP_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.GCP_HOST }} >> ~/.ssh/known_hosts
 
       - name: 📁 Copy site files to GCP VM
         run: |
-          ssh -i ~/.ssh/id_rsa `${{ secrets.GCP_USER }}@`${{ secrets.GCP_HOST }} \
+          ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} \
             "mkdir -p ~/deployments/lawtitude/Lawtitude-Legal_files"
           scp -i ~/.ssh/id_rsa index.html \
-            `${{ secrets.GCP_USER }}@`${{ secrets.GCP_HOST }}:~/deployments/lawtitude/
+            ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }}:~/deployments/lawtitude/
           scp -i ~/.ssh/id_rsa -r Lawtitude-Legal_files/ \
-            `${{ secrets.GCP_USER }}@`${{ secrets.GCP_HOST }}:~/deployments/lawtitude/
+            ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }}:~/deployments/lawtitude/
           scp -i ~/.ssh/id_rsa docker-compose.yml \
-            `${{ secrets.GCP_USER }}@`${{ secrets.GCP_HOST }}:~/deployments/lawtitude/
+            ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }}:~/deployments/lawtitude/
 
       - name: 🐳 Start container via Docker Compose
         run: |
-          ssh -i ~/.ssh/id_rsa `${{ secrets.GCP_USER }}@`${{ secrets.GCP_HOST }} 'cd ~/deployments/lawtitude && docker compose up -d --force-recreate && docker compose ps'
+          ssh -i ~/.ssh/id_rsa ${{ secrets.GCP_USER }}@${{ secrets.GCP_HOST }} 'cd ~/deployments/lawtitude && docker compose up -d --force-recreate && docker compose ps'
 
       - name: ✅ Deployment Complete
         run: echo "🎉 Lawtitude Legal is live at https://lawtitude.34.19.191.244.nip.io"
-"@ | Out-File -FilePath ".github\workflows\deploy.yml" -Encoding utf8
