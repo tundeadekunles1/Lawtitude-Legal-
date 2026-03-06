@@ -15,11 +15,11 @@ services:
       - "traefik.enable=true"
 
       - 'traefik.http.routers.lawtitude-http.entrypoints=web'
-      - 'traefik.http.routers.lawtitude-http.rule=Host(`lawtitude.34.19.191.244.nip.io`)'
+      - 'traefik.http.routers.lawtitude-http.rule=Host(`Lawtitudelegal.com`)'
       - 'traefik.http.routers.lawtitude-http.middlewares=redirect-to-https'
 
       - 'traefik.http.routers.lawtitude.entrypoints=websecure'
-      - 'traefik.http.routers.lawtitude.rule=Host(`lawtitude.34.19.191.244.nip.io`)'
+      - 'traefik.http.routers.lawtitude.rule=Host(`Lawtitudelegal.com`)'
       - 'traefik.http.routers.lawtitude.tls.certresolver=letsencrypt'
 
       - 'traefik.http.services.lawtitude.loadbalancer.server.port=80'
